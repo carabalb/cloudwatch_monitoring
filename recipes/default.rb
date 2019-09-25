@@ -21,8 +21,6 @@
 # limitations under the License.
 #
 
-include_recipe 'cron'
-
 install_path="#{node[:cw_mon][:home_dir]}/aws-scripts-mon-v#{node[:cw_mon][:version]}"
 zip_filepath="#{node[:cw_mon][:home_dir]}/CloudWatchMonitoringScripts-#{node[:cw_mon][:version]}.zip"
 
@@ -126,7 +124,7 @@ else
   options << "--aws-credential-file #{install_path}/awscreds.conf"
 end
 
-cron_d 'cloudwatch_monitoring' do
+cron 'cloudwatch_monitoring' do
   minute "*/#{node[:cw_mon][:cron_minutes]}"
   user node[:cw_mon][:user]
   command %Q{#{install_path}/mon-put-instance-data.pl #{(options).join(' ')} || logger -t aws-scripts-mon "status=failed exit_code=$?"}
